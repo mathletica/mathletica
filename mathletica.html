@@ -1,0 +1,759 @@
+Last:<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mathletica | Mathematics Club</title>
+  <link rel="icon" type="image/x-icon" href="https://i.ibb.co/rfZTggVX/Mathletica-Logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="theme-color" content="#ffffff" id="meta-theme-color">
+
+  <style>
+    /*
+      Apple-inspired redesign for Mathletica
+      - Preserves your content and structure
+      - Adds light/dark support, subtle motion, better spacing
+      - Uses system SF-style fonts: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, etc.
+    */
+
+    :root{
+      --bg: #f5f5f7;
+      --panel: #ffffff;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --accent: #007AFF;
+      --glass: rgba(255,255,255,0.6);
+      --card-shadow: 0 10px 30px rgba(24,24,24,0.06);
+      --radius: 14px;
+      --header-h: 64px;
+      --max-width: 1180px;
+    }
+
+    /* Dark theme variables */
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg: #0b0b0c;
+        --panel: linear-gradient(180deg,#0f0f10,#0b0b0c);
+        --text: #f2f2f4;
+        --muted: #9b9b9f;
+        --accent: #0a84ff;
+        --glass: rgba(255,255,255,0.03);
+        --card-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      }
+      body[data-theme="light"]{
+        /* user override: force light when system is dark */
+        --bg: #f5f5f7;
+        --panel: #ffffff;
+        --text: #1d1d1f;
+        --muted: #6e6e73;
+        --accent: #007AFF;
+        --glass: rgba(255,255,255,0.6);
+        --card-shadow: 0 10px 30px rgba(24,24,24,0.06);
+      }
+    }
+
+    /* If user toggles dark explicitly */
+    body[data-theme="dark"]{
+      --bg: #0b0b0c;
+      --panel: linear-gradient(180deg,#0f0f10,#0b0b0c);
+      --text: #f2f2f4;
+      --muted: #9b9b9f;
+      --accent: #0a84ff;
+      --glass: rgba(255,255,255,0.03);
+      --card-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    /* Base reset & typography */
+    *{box-sizing: border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      -webkit-text-size-adjust:100%;
+    }
+
+    /* container */
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 24px}
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:1200;
+      height:var(--header-h);
+      display:flex; align-items:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.35));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      transition: background 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+    }
+
+    body[data-theme="dark"] header{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+    .header-inner{
+      width:100%; display:flex; align-items:center; justify-content:space-between;
+      gap: 16px;
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:12px;
+    }
+    .logo-wrap{width:36px;height:36px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--panel);box-shadow: var(--card-shadow);}
+    .logo-wrap img{width:100%;height:100%;object-fit:cover}
+
+    .brand h1{font-size:18px; font-weight:600; letter-spacing:-0.02em; margin:0}
+
+    /* Nav */
+    nav{display:flex; align-items:center; gap:26px}
+    nav ul{display:flex; gap:28px; list-style:none; padding:0; margin:0; align-items:center}
+    nav a{font-size:13px;color:var(--text);text-decoration:none;opacity:0.9;padding:8px 0;position:relative}
+    nav a:hover{opacity:1}
+    nav a:after{content:'';position:absolute;left:0;right:0;height:2px;bottom:-8px;background:transparent;transition:background 220ms, transform 220ms;transform:scaleX(0)}
+    nav a:hover:after{background:var(--accent);transform:scaleX(1)}
+
+    .nav-cta{background:var(--accent); color:white; padding:8px 14px; border-radius:999px; font-weight:600; font-size:13px; border:none; cursor:pointer; text-decoration:none}
+    .nav-cta:hover{transform:translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,0.08);}
+
+    /* header controls */
+    .header-controls{display:flex; gap:12px; align-items:center}
+    .icon-btn{width:44px;height:44px;border-radius:10px;border:none;background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+    .icon-btn:focus{outline:2px solid var(--accent); outline-offset:2px}
+
+    /* Mobile menu button */
+    .menu-toggle{display:none}
+
+    /* HERO */
+    .hero{
+      position:relative;
+      padding: 88px 0 72px;
+      min-height: 68vh;
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
+    }
+
+    .hero-inner{position:relative; z-index:3; text-align:center; max-width:980px; margin:0 auto}
+    .hero h2{
+      font-size: clamp(36px, 6vw, 86px);
+      line-height:1.02;
+      font-weight:700;
+      margin:0 0 18px;
+      letter-spacing:-0.02em;
+      -webkit-font-smoothing:antialiased;
+    }
+    .hero p{
+      margin:0 auto 28px;
+      font-size: clamp(15px, 2.2vw, 21px);
+      color:var(--muted);
+      max-width:780px;
+      font-weight:400;
+    }
+
+    .hero-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+    .btn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:12px 20px; border-radius:999px; cursor:pointer;
+      font-weight:600; border:none; text-decoration:none;
+      transition: transform 220ms ease, box-shadow 220ms;
+      background: var(--accent); color:#fff; font-size:15px;
+    }
+    .btn.secondary{
+      background:transparent; border:1px solid rgba(0,0,0,0.08); color:var(--accent);
+    }
+    body[data-theme="dark"] .btn.secondary{ border:1px solid rgba(255,255,255,0.06); color:var(--accent) }
+
+    .btn:active{ transform:translateY(1px) }
+
+    /* subtle hero ornament (equations) */
+    .hero-ornaments{
+      position:absolute; inset:0; z-index:1; pointer-events:none;
+      display:block; opacity:0.09;
+      transition:opacity 300ms;
+      font-family: "Times New Roman", serif;
+    }
+
+    .equation{
+      position:absolute; font-size:40px; transform-origin:center;
+      will-change: transform, opacity;
+    }
+
+    /* positions (kept from your original) but simplified */
+    .equation.e1{top:8%; left:6%; font-size:44px; transform: rotate(-6deg)}
+    .equation.e2{top:20%; right:8%; font-size:40px; transform: rotate(3deg)}
+    .equation.e3{bottom:36%; left:4%; font-size:48px; transform: rotate(-2deg)}
+    .equation.e4{bottom:18%; right:6%; font-size:40px; transform: rotate(4deg)}
+    .equation.e5{top:44%; left:18%; font-size:42px; transform: rotate(-3deg)}
+    .equation.e6{top:64%; right:18%; font-size:36px; transform: rotate(2deg)}
+
+    /* decorative gradient glow behind hero text */
+    .hero-glow{
+      position:absolute; inset:auto 12% 14% 12%; z-index:0;
+      width:70%; height:60%;
+      background: radial-gradient(circle at 30% 20%, rgba(0,122,255,0.12), transparent 12%),
+                  radial-gradient(circle at 80% 70%, rgba(10,132,255,0.08), transparent 12%);
+      filter: blur(36px);
+      pointer-events:none;
+    }
+
+    /* Sections */
+    section{padding:88px 0; position:relative}
+    .section-title{text-align:center; margin-bottom:48px}
+    .section-title h2{font-size: clamp(24px, 5vw, 48px); margin:0; font-weight:700}
+    .section-title p{color:var(--muted); margin-top:10px; font-size:16px}
+
+    /* About layout */
+    .about-grid{display:grid; grid-template-columns: 1fr; gap:28px; align-items:center}
+    .about-text h3{font-size:28px;margin:0 0 16px;font-weight:700}
+    .about-text p{color:var(--muted); margin-bottom:12px}
+    .about-image{border-radius:16px; overflow:hidden; box-shadow:var(--card-shadow); background:var(--panel)}
+    .about-image img{width:100%;height:auto;display:block;transition:transform 420ms ease}
+
+    .about-image:hover img{transform:scale(1.03)}
+
+    /* Research cards grid */
+    .grid{display:grid; gap:24px}
+    .research-grid{grid-template-columns:1fr; margin-top:12px}
+    .card{
+      background:var(--panel);
+      border-radius:var(--radius);
+      box-shadow:var(--card-shadow);
+      border:1px solid rgba(0,0,0,0.04);
+      overflow:hidden;
+      transition: transform 280ms ease, box-shadow 280ms ease;
+    }
+    body[data-theme="dark"] .card{ border:1px solid rgba(255,255,255,0.03) }
+
+    .card:hover{ transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.12) }
+
+    .card .media{height:220px; overflow:hidden}
+    .card .media img{width:100%;height:100%;object-fit:cover;transition:transform 500ms}
+    .card:hover .media img{transform:scale(1.07)}
+
+    .card .card-body{padding:22px}
+    .card h3{margin:0 0 8px;font-size:20px}
+    .card p{color:var(--muted); margin:0 0 12px}
+
+    .research-link{color:var(--accent); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:8px}
+    .pdf-download{margin-top:16px; padding:16px; border-radius:12px; background: linear-gradient(180deg, rgba(0,122,255,0.03), rgba(0,122,255,0.01)); border-left:4px solid var(--accent)}
+
+    /* Resources */
+    .resources-grid{grid-template-columns:1fr; gap:18px}
+    .resource-card{padding:30px; text-align:center}
+    .resource-icon{width:68px;height:68px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:18px;background:linear-gradient(135deg,var(--accent), #0051CC); color:white}
+
+    /* Challenge layout */
+    .challenge-grid{display:grid; grid-template-columns:1fr; gap:28px}
+    .challenge-image img{width:100%;height:auto;border-radius:12px}
+
+    /* CTA */
+    .cta{
+      padding:72px 0; 
+      border-radius:16px; 
+      margin:28px 0 0; 
+      background: linear-gradient(135deg, var(--accent), #0051CC); 
+      color:white; 
+      text-align:center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+      background-size: cover;
+    }
+    
+    .cta h2{margin:0 0 12px;font-size:28px}
+    .cta p{margin:0 0 18px;opacity:0.95}
+
+    /* Glass effect for both buttons in CTA */
+    .cta .btn {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .cta .btn.secondary {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .cta .btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Footer */
+    footer{padding:56px 0 40px;border-top:1px solid rgba(0,0,0,0.04)}
+    body[data-theme="dark"] footer{ border-top:1px solid rgba(255,255,255,0.03) }
+    .footer-grid{display:grid; grid-template-columns:1fr; gap:28px}
+    .footer-column h3{margin:0 0 10px;font-size:18px}
+    .footer-links{list-style:none;padding:0;margin:0}
+    .footer-links li{margin-bottom:10px;color:var(--muted)}
+    .social-links{display:flex; gap:12px}
+
+    .copyright{margin-top:20px;color:var(--muted);font-size:14px;text-align:center}
+
+    /* Responsive layout */
+    @media(min-width:760px){
+      .about-grid{grid-template-columns: 52% 44%}
+      .research-grid{grid-template-columns: repeat(3, 1fr)}
+      .resources-grid{grid-template-columns: repeat(3, 1fr)}
+      .challenge-grid{grid-template-columns: 48% 48%}
+      .footer-grid{grid-template-columns: repeat(3, 1fr)}
+    }
+
+    /* Mobile: header collapse */
+    @media(max-width:760px){
+      nav{display:none}
+      .menu-toggle{display:inline-flex}
+      header{padding:0 12px}
+      .hero{padding:56px 0 40px}
+      section{padding:56px 0}
+    }
+
+    /* small screens typography */
+    @media(max-width:420px){
+      .brand h1{font-size:16px}
+      .hero h2{font-size:36px}
+    }
+
+    /* accessibility: respects reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none!important; animation:none!important}
+    }
+
+    /* tiny utility */
+    .muted{color:var(--muted)}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner" role="banner">
+      <div class="brand" aria-hidden="false">
+        <div class="logo-wrap" aria-hidden="true">
+          <img src="https://i.ibb.co/rfZTggVX/Mathletica-Logo.png" alt="Mathletica logo">
+        </div>
+        <h1>Mathletica</h1>
+      </div>
+
+      <!-- primary nav -->
+      <nav role="navigation" aria-label="Primary">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#research">Research</a></li>
+          <li><a href="#resources">Resources</a></li>
+          <li><a href="#challenge">Challenge</a></li>
+          <li><a href="#contact" class="nav-cta">Join Us</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-controls" role="group" aria-label="Header controls">
+        <button class="icon-btn" id="themeToggle" title="Toggle theme" aria-pressed="false" aria-label="Toggle light and dark mode">
+          <i class="fas fa-moon"></i>
+        </button>
+
+        <button class="icon-btn menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile navigation (cloned for accessibility) -->
+    <nav id="mobileMenu" class="hidden" aria-hidden="true" style="position:absolute; left:0; right:0; top:64px; background:var(--panel); border-bottom:1px solid rgba(0,0,0,0.04); box-shadow: var(--card-shadow);">
+      <div class="container" style="padding:12px 24px;">
+        <ul style="list-style:none; margin:0; padding:0;">
+          <li style="padding:10px 0;"><a href="#about">About</a></li>
+          <li style="padding:10px 0;"><a href="#research">Research</a></li>
+          <li style="padding:10px 0;"><a href="#resources">Resources</a></li>
+          <li style="padding:10px 0;"><a href="#challenge">Challenge</a></li>
+          <li style="padding:10px 0;"><a href="#contact" class="nav-cta">Join Us</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <main>
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-ornaments" aria-hidden="true">
+        <div class="equation e1">∫ f(x) dx</div>
+        <div class="equation e2">∑<sub>n=1</sub><sup>∞</sup> 1/n²</div>
+        <div class="equation e3">e<sup>iπ</sup> + 1 = 0</div>
+        <div class="equation e4">∇ × E = -∂B/∂t</div>
+        <div class="equation e5">F = G(m₁m₂)/r²</div>
+        <div class="equation e6">a² + b² = c²</div>
+      </div>
+
+      <div class="hero-glow" aria-hidden="true"></div>
+
+      <div class="container hero-inner">
+        <h2 id="hero-heading">Explore the World of Mathematics</h2>
+        <p>Mathletica is a mathematics club for those who seek to embark on a journey with numbers: explore, question, and deeply understand the beauty of mathematics.</p>
+
+        <div class="hero-actions">
+          <a class="btn" href="#about">Learn More</a>
+          <a class="btn secondary" href="#contact">Join Our Club</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="about">
+      <div class="container">
+        <div class="section-title">
+          <h2>About Mathletica</h2>
+          <p>Discover our mission and what makes our mathematics community unique</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-text">
+            <h3>Journey with Numbers</h3>
+            <p class="muted">Mathletica is the Math Club founded for people who seek to embark on a journey with numbers: explore, question and deeply understand areas of mathematics.</p>
+            <p class="muted">Our club helps members learn advanced math topics, engage in research, and support one another in developing stronger conceptual foundations.</p>
+            <p class="muted">Mathletica also works to make mathematics accessible to everyone by providing free math education to underprivileged students in rural areas.</p>
+            <p><a class="btn" href="#">Our Mission</a></p>
+          </div>
+
+          <div class="about-image card" aria-hidden="false">
+            <img src="https://images.unsplash.com/photo-1596495577886-d920f1fb7238?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Mathematics Visualization">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESEARCH -->
+    <section id="research" class="research">
+      <div class="container">
+        <div class="section-title">
+          <h2>Research & Notes</h2>
+          <p>Explore our latest mathematical research and educational materials</p>
+        </div>
+
+        <div class="grid research-grid">
+          <article class="card">
+            <div class="media"><img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Number Theory"></div>
+            <div class="card-body">
+              <h3>Number Theory Notes</h3>
+              <p class="muted">Comprehensive notes covering prime numbers, modular arithmetic, and Diophantine equations.</p>
+              <a class="research-link" href="#">View Notes <i class="fas fa-arrow-right"></i></a>
+
+              <div class="pdf-download" aria-hidden="false">
+                <h4 style="margin:0 0 6px">View Number Theory Notes</h4>
+                <p class="muted" style="margin:0 0 12px">Access our comprehensive Number Theory notes online.</p>
+                <a class="btn" href="https://jumpshare.com/share/PjDdZHSn8hXknugsgCJ9" target="_blank"><i class="fas fa-eye"></i> View Notes</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="media"><img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Pythagorean Theorem"></div>
+            <div class="card-body">
+              <h3>Pythagorean Triple Research</h3>
+              <p class="muted">Exploring the properties and applications of Pythagorean triples in modern mathematics.</p>
+              <a class="research-link" href="#">Read Research <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="media"><img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Cryptography"></div>
+            <div class="card-body">
+              <h3>Number Theory for Cryptography</h3>
+              <p class="muted">Applications of number theory in modern cryptographic systems and security protocols.</p>
+              <a class="research-link" href="#">Explore Applications <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESOURCES -->
+    <section id="resources" class="resources">
+      <div class="container">
+        <div class="section-title">
+          <h2>Mathematical Resources</h2>
+          <p>Engage with the global mathematical community through competitions and events</p>
+        </div>
+
+        <div class="grid resources-grid">
+          <div class="resource-card card">
+            <div style="padding-top:10px;">
+              <div class="resource-icon"><i class="fas fa-globe-americas"></i></div>
+              <h3>International Mathematical Olympiad (IMO)</h3>
+              <p class="muted">The world championship mathematics competition for high school students, held annually in a different country.</p>
+              <a class="btn" href="https://www.imo-official.org/" target="_blank" rel="noopener">Learn More</a>
+            </div>
+          </div>
+
+          <div class="resource-card card">
+            <div style="padding-top:10px;">
+              <div class="resource-icon"><i class="fas fa-trophy"></i></div>
+              <h3>William Lowell Putnam Competition</h3>
+              <p class="muted">A challenging mathematics competition for undergraduate college students in the United States and Canada.</p>
+              <a class="btn" href="https://www.maa.org/math-competitions/putnam-competition" target="_blank" rel="noopener">Learn More</a>
+            </div>
+          </div>
+
+          <div class="resource-card card">
+            <div style="padding-top:10px;">
+              <div class="resource-icon"><i class="fas fa-female"></i></div>
+              <h3>European Girls' Mathematical Olympiad (EGMO)</h3>
+              <p class="muted">An international competition for high school girls, created to encourage and support young women in mathematics.</p>
+              <a class="btn" href="https://www.egmo.org/" target="_blank" rel="noopener">Learn More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHALLENGE -->
+    <section id="challenge" class="challenge">
+      <div class="container">
+        <div class="section-title">
+          <h2>Mathletica Challenge</h2>
+          <p>Test your mathematical skills with our engaging problem sets</p>
+        </div>
+
+        <div class="challenge-grid">
+          <div class="challenge-image card">
+            <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Math Challenge">
+          </div>
+
+          <div class="challenge-text">
+            <h3>"10 Math Problems I Wish I Had Solved Before"</h3>
+            <p class="muted">This open challenge invites members to explore, solve, and share 10 intriguing math problems that have sparked their curiosity.</p>
+            <p class="muted">By participating, members contribute to a growing collection of mathematical ideas and perspectives.</p>
+            <p><a class="btn" href="#">Share Your Problems</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" aria-labelledby="cta-heading">
+      <div class="container">
+        <h2 id="cta-heading">Join Our Mathematical Community</h2>
+        <p>Become part of Mathletica and explore the fascinating world of mathematics with like-minded individuals.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="btn" href="#">Join Our Mailing List</a>
+          <a class="btn secondary" href="#contact">Contact Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="contact" aria-labelledby="footer-heading">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h3>Mathletica</h3>
+          <p class="muted">A mathematics club dedicated to exploring, questioning, and understanding the beauty of numbers.</p>
+          <div class="social-links" aria-label="Social media">
+            <a class="icon-btn" href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a class="icon-btn" href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a class="icon-btn" href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a class="icon-btn" href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#research">Research</a></li>
+            <li><a href="#resources">Resources</a></li>
+            <li><a href="#challenge">Challenges</a></li>
+            <li><a href="#">Events</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3>Contact Us</h3>
+          <ul class="footer-links" style="margin:0; padding:0;">
+            <li style="display:flex;align-items:center;gap:8px;"><i class="fas fa-envelope" aria-hidden="true"></i><span class="muted">mathleticaclub@gmail.com</span></li>
+            <li style="display:flex;align-items:center;gap:8px;"><i class="fas fa-phone" aria-hidden="true"></i><span class="muted">+8801754637591</span></li>
+            <li style="display:flex;align-items:center;gap:8px;"><i class="fas fa-map-marker-alt" aria-hidden="true"></i><span class="muted">Chittagong, Bangladesh</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="copyright">
+        <p>&copy; 2025 Mathletica. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Respect reduced motion
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Parallax-ish micro animation for equations: small translate on scroll
+    (function(){
+      if (prefersReduced) return;
+
+      const eqs = document.querySelectorAll('.equation');
+      function onScroll(){
+        const scrollY = window.scrollY;
+        eqs.forEach((el, i) => {
+          // small movement based on index for depth effect
+          const speed = 0.03 + (i * 0.01);
+          const offset = (scrollY * speed) % 200;
+          el.style.transform = el.style.transform.replace(/translateY\([^)]*\)/,'') + ` translateY(${ -offset }px)`;
+          // subtle rotate oscillation:
+          const angle = Math.sin((scrollY + i*50)/250) * 2;
+          el.style.transform += ` rotate(${angle}deg)`;
+        });
+      }
+      window.addEventListener('scroll', onScroll, { passive:true });
+      // initial call
+      onScroll();
+    })();
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener('click', () => {
+        const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+        menuToggle.setAttribute('aria-expanded', String(!expanded));
+        mobileMenu.classList.toggle('hidden');
+        mobileMenu.setAttribute('aria-hidden', String(expanded));
+      });
+
+      // close on link click
+      mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+      }));
+    }
+
+    // Smooth scroll with offset for sticky header
+    document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
+      anchor.addEventListener('click', function(e){
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          const headerOffset = 64; // header height
+          const elementPosition = target.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset - 10;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Theme handling: follows system, but user can override. Persist choice in localStorage.
+    const themeToggle = document.getElementById('themeToggle');
+    const metaTheme = document.getElementById('meta-theme-color');
+
+    // helpers
+    const saveTheme = (value) => localStorage.setItem('mathletica-theme', value);
+    const loadTheme = () => localStorage.getItem('mathletica-theme');
+
+    function applyTheme(theme){
+      if(theme === 'dark'){
+        document.body.setAttribute('data-theme','dark');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        themeToggle.setAttribute('aria-pressed','true');
+        if(metaTheme) metaTheme.content = '#0b0b0c';
+      } else if(theme === 'light'){
+        document.body.setAttribute('data-theme','light');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        themeToggle.setAttribute('aria-pressed','false');
+        if(metaTheme) metaTheme.content = '#ffffff';
+      } else {
+        // follow system: remove data-theme
+        document.body.removeAttribute('data-theme');
+        const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        themeToggle.setAttribute('aria-pressed', String(isDark));
+        if(metaTheme) metaTheme.content = isDark ? '#0b0b0c' : '#ffffff';
+      }
+    }
+
+    // initialize
+    (function initTheme(){
+      const stored = loadTheme();
+      if(stored === 'dark' || stored === 'light'){
+        applyTheme(stored);
+      } else {
+        applyTheme(null); // follow system
+      }
+    })();
+
+    if(themeToggle){
+      themeToggle.addEventListener('click', () => {
+        const current = localStorage.getItem('mathletica-theme');
+        if(current === 'dark'){
+          saveTheme('light');
+          applyTheme('light');
+        } else if(current === 'light'){
+          // go back to system
+          localStorage.removeItem('mathletica-theme');
+          applyTheme(null);
+        } else {
+          // no stored preference: toggle based on system
+          const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          saveTheme(isDark ? 'light' : 'dark');
+          applyTheme(isDark ? 'light' : 'dark');
+        }
+      });
+
+      // keyboard accessibility: Enter/Space should toggle
+      themeToggle.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          themeToggle.click();
+        }
+      });
+    }
+
+    // Update theme button when system preference changes (only if user hasn't pinned a theme)
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      const stored = loadTheme();
+      if(!stored){
+        applyTheme(null);
+      }
+    });
+
+    // simple intersection observer for reveal animations (respects reduced motion)
+    (function revealOnScroll(){
+      if(prefersReduced) return;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = 'translateY(0)';
+            entry.target.style.transition = 'opacity 520ms cubic-bezier(.2,.9,.2,1), transform 520ms cubic-bezier(.2,.9,.2,1)';
+            io.unobserve(entry.target);
+          }
+        });
+      }, {threshold: 0.08});
+
+      document.querySelectorAll('.card, .about-image, .resource-card, .challenge-image').forEach(el => {
+        el.style.opacity = 0;
+        el.style.transform = 'translateY(10px)';
+        io.observe(el);
+      });
+    })();
+  </script>
+</body>
+</html>
